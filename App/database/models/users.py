@@ -26,7 +26,12 @@ class Users(Base):
     guild_settings_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("guild_settings.id"), nullable=False
     )
-
+    count_messages: Mapped[int] = mapped_column(
+        Integer, default=0, server_default="0", nullable=False
+    )
+    count_voice_minutes: Mapped[int] = mapped_column(
+        Integer, default=0, server_default="0", nullable=False
+    )
     guild_settings: Mapped[GuildSettings] = relationship(back_populates="users")
 
     def __repr__(self) -> str:

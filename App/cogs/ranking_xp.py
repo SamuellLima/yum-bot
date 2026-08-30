@@ -15,13 +15,13 @@ class RankingXP(commands.Cog):
         embed = discord.Embed(
             title="oii... quer xp?? 💞",
             description=(
-                
                 "para ganhar xp, voce precisa interagir com o servidor.\n"
                 "\n"
                 "vc sobe xp quando:\n"
                 "💭 envia **mensagens** — mas tem q interagir muuuuuito com o servidor "
                 "não é só mandar uma mensagem e vazar\n"
-                "🎤 **call** — conversar com os amiguinhos, ficar um tempinho no canal de voz, tambem conta\n"
+                "🎤 **call** — conversar com os amiguinhos, "
+                "ficar um tempinho no canal de voz, tambem conta\n"
                 "🤖 **e ate mesmo usar os bots do servidor, tambem conta\n"
                 "\n"
                 "basicamente, apenas exista\n"

@@ -1,0 +1,11 @@
+# Dependências diretas do código (main.py, App/, alembic/).
+# Versões alinhadas ao ambiente em que o projeto foi validado.
+discord.py~=2.7.1
+python-dotenv~=1.2.3
+sqlalchemy~=2.0.52
+alembic~=1.19.1
+colorama~=0.4.6
+psycopg[binary]~=3.3.4
+
+# Ferramentas de qualidade
+ruff~=0.12.12

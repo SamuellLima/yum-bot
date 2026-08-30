@@ -1,0 +1,46 @@
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Testes e ferramentas
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# IDEs e editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Logs e dumps locais
+*.log
+*.sqlite3
+*.db

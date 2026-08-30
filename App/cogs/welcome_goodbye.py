@@ -1,6 +1,8 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 
+from App.services.ranking import RankingManager
 from App.services.servers_config import ServersConfigManager
 
 
@@ -9,16 +11,18 @@ class WelcomeGoodbye(commands.Cog):
         self.bot = bot
         self._last_member = None
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="set_welcome_goodbye_channel",
+        description="Define o canal de boas-vindas e despedida.",
+    )
+    @commands.has_guild_permissions(manage_guild=True)
+    @commands.guild_only()
+    @app_commands.guild_only()
+    @app_commands.describe(channel="Canal de texto para welcome e goodbye")
+    @app_commands.default_permissions(manage_guild=True)
     async def set_welcome_goodbye_channel(
-        self, ctx: commands.Context, channel: discord.TextChannel | None = None
+        self, ctx: commands.Context, channel: discord.TextChannel
     ):
-        if channel is None:
-            await ctx.reply(
-                "Informe o canal (menção ou ID). Exemplo: `!set_welcome_goodbye_channel #geral`"
-            )
-            return
-
         if ctx.guild is None:
             await ctx.reply("Esse comando só funciona em um servidor.")
             return
@@ -35,6 +39,8 @@ class WelcomeGoodbye(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
+        await RankingManager().ensure_user(member.guild.id, member.id, member.name)
+
         channel = await self._welcome_channel(member.guild)
         if channel is None:
             return

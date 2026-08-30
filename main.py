@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 # for testing purposes
-@bot.command()
+@bot.hybrid_command(name="ping", description="Responde com Pong!")
 async def ping(ctx: commands.Context):
     await ctx.reply("Pong!")
 
@@ -31,6 +31,8 @@ async def carry_cogs():
 async def setup_hook():
     await carry_cogs()
     Print.success("Cogs loaded")
+    synced = await bot.tree.sync()
+    Print.success(f"Slash commands sincronizados: {len(synced)}")
 
 
 try:

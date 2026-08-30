@@ -21,5 +21,9 @@
 
 <p align="center">
   Lint e formatação com <a href="https://docs.astral.sh/ruff/">Ruff</a> —
-  como usar está em cada README de idioma (seção <em>Ruff</em>).
+  como usar está em cada README de idioma (seção <em>Ruff</em>).<br/>
+  Linting and formatting with <a href="https://docs.astral.sh/ruff/">Ruff</a> —
+  how to use it is in each language README (<em>Ruff</em> section).<br/>
+  Lint y formato con <a href="https://docs.astral.sh/ruff/">Ruff</a> —
+  cómo usarlo está en cada README de idioma (sección <em>Ruff</em>).
 </p>

@@ -18,11 +18,11 @@ class XP(commands.Cog):
         message_count = await self.ranking.add_message_count(data.guild.id, data.author.id)
         Print.success(f"Message count added for user {data.author.id}")
 
-        if message_count >= 20:
+        if message_count >= 100:
             Print.success(f"User {data.author.id} sent 20 messages, adding 1 XP")
             await self.ranking.get_message_count(data.guild.id, data.author.id)
             await data.channel.send(
-                "You have interacted with the server enough to receive 1 XP! Keep it up!"
+                "Você interagiu o suficiente com o servidor para receber XP! 🎁 Bom garoto(a)! Continue assim! 💞"
             )
 
     @commands.Cog.listener()

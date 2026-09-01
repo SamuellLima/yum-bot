@@ -4,14 +4,36 @@ services:
     container_name: yumbot-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: yumbot
-      POSTGRES_USER: yumbot
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: ${POSTGRES_DB:-yumbot}
+      POSTGRES_USER: ${POSTGRES_USER:-yumbot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yourpassword}
       TZ: America/Sao_Paulo
     ports:
       - "15432:5432"
     volumes:
       - yumbot_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yumbot} -d ${POSTGRES_DB:-yumbot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: yumbot:latest
+    container_name: yumbot-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: America/Sao_Paulo
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-yumbot}:${POSTGRES_PASSWORD:-yourpassword}@postgres:5432/${POSTGRES_DB:-yumbot}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   yumbot_pgdata:

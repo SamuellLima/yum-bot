@@ -97,9 +97,13 @@ class RankingManager:
                 user.count_messages = 0
             return user.count_messages
 
-    async def add_voice_minutes(self, server_id: int, user_id: int, minutes: int) -> None:
+    async def add_voice_minutes(self, server_id: int, user_id: int, minutes: int) -> int:
         with get_db() as db:
             user = self._verify_user(db, server_id, user_id)
             if user is None:
-                return
+                return 0
+            previous_minutes = user.count_voice_minutes
             user.count_voice_minutes += minutes
+            xp_gained = user.count_voice_minutes // 30 - previous_minutes // 30
+            user.xp += xp_gained
+            return xp_gained

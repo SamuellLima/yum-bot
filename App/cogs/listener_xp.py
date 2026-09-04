@@ -1,7 +1,5 @@
-from datetime import UTC, datetime
-
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from App.services.ranking import RankingManager
 from App.utils.print import Print
@@ -11,21 +9,10 @@ class XP(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.ranking = RankingManager()
-        self._voice_joined_at: dict[tuple[int, int], datetime] = {}
-        self._voice_seeded = False
+        self.voice_xp_loop.start()
 
-    @commands.Cog.listener()
-    async def on_ready(self) -> None:
-        if self._voice_seeded:
-            return
-        self._voice_seeded = True
-
-        now = datetime.now(UTC)
-        for guild in self.bot.guilds:
-            for member in guild.members:
-                if member.bot or member.voice is None or member.voice.channel is None:
-                    continue
-                self._voice_joined_at.setdefault((guild.id, member.id), now)
+    def cog_unload(self) -> None:
+        self.voice_xp_loop.cancel()
 
     @commands.Cog.listener()
     async def on_message(self, data: discord.Message) -> None:
@@ -43,15 +30,6 @@ class XP(commands.Cog):
                 "Bom garoto(a)! Continue assim! 💞"
             )
 
-    async def _flush_voice_time(self, guild_id: int, user_id: int) -> None:
-        started = self._voice_joined_at.pop((guild_id, user_id), None)
-        if started is None:
-            return
-        minutes = int((datetime.now(UTC) - started).total_seconds() // 60)
-        if minutes <= 0:
-            return
-        await self.ranking.add_voice_minutes(guild_id, user_id, minutes)
-
     @commands.Cog.listener()
     async def on_voice_state_update(
         self,
@@ -62,14 +40,24 @@ class XP(commands.Cog):
         if member.bot or member.guild is None:
             return
 
-        key = (member.guild.id, member.id)
-        was_in = before.channel is not None
-        now_in = after.channel is not None
+        if before.channel is None and after.channel is not None:
+            await self.ranking.ensure_user(member.guild.id, member.id, member.display_name)
 
-        if now_in and not was_in:
-            self._voice_joined_at[key] = datetime.now(UTC)
-        elif was_in and not now_in:
-            await self._flush_voice_time(member.guild.id, member.id)
+    @tasks.loop(minutes=1)
+    async def voice_xp_loop(self) -> None:
+        for guild in self.bot.guilds:
+            for voice_channel in guild.voice_channels:
+                for member in voice_channel.members:
+                    if not member.bot:
+                        xp_gained = await self.ranking.add_voice_minutes(guild.id, member.id, 1)
+                        if xp_gained:
+                            Print.success(
+                                f"User {member.id} recebeu {xp_gained} XP por tempo em call"
+                            )
+
+    @voice_xp_loop.before_loop
+    async def before_voice_xp_loop(self) -> None:
+        await self.bot.wait_until_ready()
 
 
 async def setup(bot: commands.Bot):

@@ -1,15 +1,14 @@
-"""Engine e sessão do SQLAlchemy."""
+"""Engine e sessão assíncronos do SQLAlchemy."""
 
 from __future__ import annotations
 
 import os
-from collections.abc import Iterator
-from contextlib import contextmanager
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from urllib.parse import parse_qs, urlparse
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from .base import Base
 
@@ -46,9 +45,8 @@ connect_args = {}
 if DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
-engine = create_engine(
+engine = create_async_engine(
     DATABASE_URL,
-    future=True,
     pool_pre_ping=True,
     pool_recycle=1800,
     pool_size=5,
@@ -57,41 +55,33 @@ engine = create_engine(
     connect_args=connect_args,
 )
 
-SessionLocal = sessionmaker(
+SessionLocal = async_sessionmaker(
     bind=engine,
     autoflush=False,
-    autocommit=False,
     expire_on_commit=False,
-    future=True,
-    class_=Session,
+    class_=AsyncSession,
 )
 
 
-@contextmanager
-def get_db() -> Iterator[Session]:
+@asynccontextmanager
+async def get_db() -> AsyncIterator[AsyncSession]:
     """Abre uma sessão, faz commit se der certo, rollback em erro e sempre fecha.
 
     Uso:
-        with get_db() as db:
+        async with get_db() as db:
             ...
     """
-    db = SessionLocal()
-    try:
+    async with SessionLocal() as db, db.begin():
         yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        db.close()
 
 
-def init_db() -> None:
+async def init_db() -> None:
     from App.database import models  # noqa: F401 — registra os modelos no metadata
 
-    Base.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 
-def dispose_engine() -> None:
+async def dispose_engine() -> None:
     """Devolve as conexões do pool ao banco. Chamar no shutdown do bot."""
-    engine.dispose()
+    await engine.dispose()

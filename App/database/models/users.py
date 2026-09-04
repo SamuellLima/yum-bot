@@ -32,6 +32,9 @@ class Users(Base):
     count_messages: Mapped[int] = mapped_column(
         Integer, default=0, server_default="0", nullable=False
     )
+    total_messages: Mapped[int] = mapped_column(
+        Integer, default=0, server_default="0", nullable=False
+    )
     count_voice_minutes: Mapped[int] = mapped_column(
         Integer, default=0, server_default="0", nullable=False
     )

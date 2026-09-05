@@ -248,58 +248,45 @@ class Roles(commands.Cog):
 
     @commands.hybrid_command(
         name="rhelp",
-        description="Show the help for the roles commands",
+        description="Mostra o que cada comando de cargos faz.",
     )
     @app_commands.guild_only()
     @app_commands.default_permissions(manage_guild=True)
     async def rhelp(self, ctx: commands.Context):
-        """Show the help for the roles commands"""
-        await ctx.reply("Help for the roles commands")
-
         embed = discord.Embed(
-            title="Quer ajuda com os comandos de cargos? 💞",
+            title="Quer ajuda com os cargos? 💞",
             description=(
-                "Pode parecer um pouco difícil, mas não é! 💪 (somente os admins podem usar)"
+                "todos os comandos funcionam com **/** ou **!**\n"
+                "ex: `/post_roles` e `!post_roles` são a mesma coisa\n"
+                "somente quem gerencia o servidor consegue usar estes"
             ),
+            color=discord.Color.from_rgb(255, 120, 160),
         )
         embed.add_field(
-            name="sjoin_role",
-            value="Define a role de entrada para o servidor 🍪",
-            inline=False,
-        )
-        embed.add_field(
-            name="set_roles_message",
-            value="Define a mensagem para o painel de cargos 📃",
-            inline=False,
-        )
-        embed.add_field(
-            name="set_roles_title",
-            value="Define o título do painel de comunidades ✨",
-            inline=False,
-        )
-        embed.add_field(
-            name="set_role_emoji",
-            value="Associa um emoji a um cargo. E... Quem reagir no painel recebe o cargo.",
-            inline=False,
-        )
-        embed.add_field(
-            name="unset_role_emoji",
-            value="Remove a associação de um emoji com cargo. 💫",
-            inline=False,
-        )
-        embed.add_field(
-            name="post_roles",
-            value="Publica o painel de cargos neste canal e adiciona as reações. 💞",
-            inline=False,
-        )
-        embed.add_field(
-            name="rhelp",
+            name="🍪  Entrada",
             value=(
-                "Mostra o help para os comandos de cargos 💞 se bem que... voce ja sabe isso né? 🤔"
+                "`/sjoin_role` `[cargo]` - cargo dado automaticamente quando alguém entra no servidor"
             ),
             inline=False,
         )
-        await ctx.reply(embed=embed)
+        embed.add_field(
+            name="✨  Painel de comunidades",
+            value=(
+                "`/set_roles_title` `[título]` - título que você quer que apareça no embed.\n"
+                "`/set_roles_message` `[mensagem]` - texto que você quer que apareça no painel.\n"
+                "`/set_role_emoji` `[cargo]` `[emoji]` - serve para associar um emoji a um cargo, quem reagir com esse emoji recebe o cargo.\n"
+                "`/unset_role_emoji` `[emoji]` - remove a associação emoji ↔ cargo.\n"
+                "`/post_roles` - publica o painel no canal em que usar o comando e adiciona as reações."
+            ),
+            inline=False,
+        )
+        embed.add_field(
+            name="💞  Ajuda",
+            value="`/rhelp` - este traz a mensagem que você está vendo agora.",
+            inline=False,
+        )
+        embed.set_footer(text="É isso, tenha um ótimo dia! 💕")
+        await ctx.send(embed=embed)
 
 
 async def setup(bot: commands.Bot):

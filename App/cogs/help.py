@@ -44,6 +44,7 @@ class Help(commands.Cog):
             name="🔧  Administração:",
             value=(
                 "somente quem gerencia o servidor consegue usar estes:\n"
+                "`/setup` - cadastra o servidor e todos os membros no banco\n"
                 "`/sjoin_role` `[cargo]` - cargo dado automaticamente na entrada\n"
                 "`/set_welcome_goodbye_channel` `[canal]` — canal de boas-vindas e despedida\n"
                 "`/set_roles_title` `[título]` - título do painel de comunidades\n"

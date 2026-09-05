@@ -8,14 +8,14 @@ class ServersConfigManager:
     """Gerencia a configuração dos servidores."""
 
     async def get_server_config(self, server_id: int) -> GuildSettings | None:
-        with get_db() as db:
-            return db.scalars(
+        async with get_db() as db:
+            return await db.scalar(
                 select(GuildSettings).where(GuildSettings.guild_id == str(server_id))
-            ).first()
+            )
 
     async def update_server_config(self, server_id: int, **values) -> None:
-        with get_db() as db:
-            db.execute(
+        async with get_db() as db:
+            await db.execute(
                 update(GuildSettings)
                 .where(GuildSettings.guild_id == str(server_id))
                 .values(**values)
@@ -31,10 +31,10 @@ class ServersConfigManager:
 
     async def set_welcome_channel_id(self, server_id: int, channel_id: int | str) -> None:
         channel_id = str(channel_id)
-        with get_db() as db:
-            config = db.scalars(
+        async with get_db() as db:
+            config = await db.scalar(
                 select(GuildSettings).where(GuildSettings.guild_id == str(server_id))
-            ).first()
+            )
             if config:
                 config.welcome_channel_id = channel_id
             else:

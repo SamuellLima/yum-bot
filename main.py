@@ -28,7 +28,7 @@ class YumBot(commands.Bot):
         await super().close()
 
 
-bot = YumBot(command_prefix="!", intents=intents)
+bot = YumBot(command_prefix="!", intents=intents, help_command=None)
 
 
 # for testing purposes

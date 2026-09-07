@@ -265,7 +265,8 @@ class Roles(commands.Cog):
         embed.add_field(
             name="🍪  Entrada",
             value=(
-                "`/sjoin_role` `[cargo]` - cargo dado automaticamente quando alguém entra no servidor"
+                "`/sjoin_role` `[cargo]` - cargo dado automaticamente"
+                " quando alguém entra no servidor"
             ),
             inline=False,
         )
@@ -274,9 +275,11 @@ class Roles(commands.Cog):
             value=(
                 "`/set_roles_title` `[título]` - título que você quer que apareça no embed.\n"
                 "`/set_roles_message` `[mensagem]` - texto que você quer que apareça no painel.\n"
-                "`/set_role_emoji` `[cargo]` `[emoji]` - serve para associar um emoji a um cargo, quem reagir com esse emoji recebe o cargo.\n"
+                "`/set_role_emoji` `[cargo]` `[emoji]` - serve para associar"
+                " um emoji a um cargo, quem reagir com esse emoji recebe o cargo.\n"
                 "`/unset_role_emoji` `[emoji]` - remove a associação emoji ↔ cargo.\n"
-                "`/post_roles` - publica o painel no canal em que usar o comando e adiciona as reações."
+                "`/post_roles` - publica o painel no canal em que usar"
+                " o comando e adiciona as reações."
             ),
             inline=False,
         )

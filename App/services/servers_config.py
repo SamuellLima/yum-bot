@@ -7,6 +7,7 @@ from App.utils.print import Print
 
 _MEMBER_INSERT_CHUNK = 2000
 
+
 class ServersConfigManager:
     """Gerencia a configuração dos servidores."""
 

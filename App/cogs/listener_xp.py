@@ -23,11 +23,10 @@ class XP(commands.Cog):
         Print.success(f"Message count added for user {data.author.id}")
 
         if message_count >= 100:
-            Print.success(f"User {data.author.id} sent 20 messages, adding 1 XP")
+            Print.success(f"User {data.author.id} sent 100 messages, adding 1 XP")
             await self.ranking.get_message_count(data.guild.id, data.author.id)
             await data.channel.send(
-                "Você interagiu o suficiente com o servidor para receber XP! 🎁 "
-                "Bom garoto(a)! Continue assim! 💞"
+                f"{data.author.mention}, interagiu o suficiente com o servidor para receber XP! 💫 "
             )
 
     @commands.Cog.listener()
@@ -47,6 +46,8 @@ class XP(commands.Cog):
     async def voice_xp_loop(self) -> None:
         for guild in self.bot.guilds:
             for voice_channel in guild.voice_channels:
+                if voice_channel.id == guild.afk_channel.id:
+                    continue
                 for member in voice_channel.members:
                     if not member.bot:
                         xp_gained = await self.ranking.add_voice_minutes(guild.id, member.id, 1)

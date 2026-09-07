@@ -7,7 +7,7 @@ from App.utils.print import Print
 
 
 class RankingManager:
-    """Gerencia o ranking de XP dos usuários."""
+    """Manages the XP ranking of users."""
 
     async def _verify_user(
         self, db: AsyncSession, server_id: int, user_id: int, username: str = ""
